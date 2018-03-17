@@ -1,5 +1,5 @@
 #include<bits/stdc++.h> 
-#define MAX 400000
+#define MAX 500000
 using namespace std;
 
 
@@ -23,21 +23,10 @@ int findMax(int a, int b){
 
 sNode findMaxSNode(sNode s1, sNode s2){
   sNode newSNode;
-  newSNode.max1 = findMax(findMax(s1.max1, s1.max2), findMax(s2.max1, s2.max2));
-  int x = INT_MIN;
-  if(s1.max1 != newSNode.max1 && s1.max1 >= x){
-    x = s1.max1;
-  }
-  if(s1.max2 != newSNode.max1 && s1.max2 >= x){
-    x = s1.max2;
-  }
-  if(s2.max1 != newSNode.max1 && s2.max1 >= x){
-    x = s2.max1;
-  }
-  if(s2.max2 != newSNode.max1 && s2.max2 >= x){
-    x = s2.max2;
-  }
-  newSNode.max2 = x;
+  int arr[] = {s1.max1, s1.max2, s2.max1, s2.max2};
+  sort(arr, arr+4, greater<int>());
+  newSNode.max1 = arr[0];
+  newSNode.max2 = arr[1];
   return newSNode;
 }
 
@@ -45,7 +34,7 @@ sNode findMaxSNode(sNode s1, sNode s2){
 sNode buildSegTree(int node, int ll, int rl, int arr[]){
   if(ll == rl){
     minArr[node].max1=arr[ll];
-    minArr[node].max2=arr[ll];
+    minArr[node].max2=INT_MIN;
     return minArr[node];
   }
   sNode lc = buildSegTree(node * 2, ll, ll + (rl - ll)/2, arr);
@@ -91,7 +80,7 @@ sNode updateSegTree(int node, int ll, int rl, int i, int arr[]){
     return minArr[node];
   if(i == ll && rl == i){
     minArr[node].max1=arr[i];
-    minArr[node].max2=arr[i];
+    minArr[node].max2=INT_MIN;
     return minArr[node];
   }
 
@@ -117,7 +106,6 @@ int main(){
   while(q--){
     getchar();
     scanf("%c%d%d", &op, &i, &j);
-//    cout<<"Input "<<op<<" "<<i<<" "<<j<<endl;
     if('Q' == op){
       cout<<sumNode(querySegTree(1, 0, n-1, i-1, j-1, arr))<<endl;
     }
@@ -126,18 +114,6 @@ int main(){
       updateSegTree(1, 0, n-1, i-1, arr);
     }
   }
-//  int i, j;
-//  cin>>i>>j;
-//  sNode s1 = querySegTree(1, 0, n-1, i, j, arr);
-//  cout<<"Query range "<<i<<","<<j<<" : "<<s1.max1<<","<<s1.max2<<endl;
-//  int x,y;
-//  cin>>x>>y;
-//  cout<<"Index "<<x<<", Value "<<y<<endl;
-//  arr[x]=y;
-//  updateSegTree(1, 0, n-1, x, arr);
-//  s1 = querySegTree(1, 0, n-1, i, j, arr);
-//  cout<<"Query range "<<i<<","<<j<<" : "<<s1.max1<<","<<s1.max2<<endl;
-//  printSegTree(1, 0, n-1, arr);
   return 0;
 }
 
